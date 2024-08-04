@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekday Checkboxes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <h1>Study 쌉개능 Checkboxes</h1>
+        <div id="checkboxes"></div>
+        <div class="links-box">
+            <h2>Links</h2>
+            <ul>
+                <a href="https://meet.google.com/qmu-ehxk-bwe">Google meet</a></li>
+            </ul>
+        </div>
+        <div id="message-section">
+            <h2>특이사항</h2>
+            <form id="message-form">
+              <input type="text" id="message-input" required>
+              <button type="submit">Submit</button>
+            </form>
+            <ul id="message-list"></ul>
+          </div>
+        
+    </div>
+    <script>
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        const checkboxesContainer = document.getElementById('checkboxes');
+
+        function createCheckboxes() {
+            days.forEach(day => {
+                const dayContainer = document.createElement('div');
+                dayContainer.className = 'day-container';
+                dayContainer.innerHTML = `
+                    <h2>${day}</h2>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="${day.toLowerCase()}" value="0"> 민재</label>
+                        <label><input type="checkbox" name="${day.toLowerCase()}" value="1"> 정택</label>
+                        <label><input type="checkbox" name="${day.toLowerCase()}" value="2"> 재만</label>
+                    </div>
+                `;
+                checkboxesContainer.appendChild(dayContainer);
+            });
+        }
+
+        function updateCheckboxes(states) {
+            for (const day in states) {
+                const checkboxes = document.querySelectorAll(`input[name="${day}"]`);
+                checkboxes.forEach((checkbox, index) => {
+                    checkbox.checked = states[day][index];
+                });
+            }
+        }
+
+        function saveCheckboxStates() {
+            const states = {};
+            days.forEach(day => {
+                const checkboxes = document.querySelectorAll(`input[name="${day.toLowerCase()}"]`);
+                states[day.toLowerCase()] = Array.from(checkboxes).map(cb => cb.checked);
+            });
+
+            fetch('/api/checkboxes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(states),
+            });
+        }
+
+        createCheckboxes();
+
+        fetch('/api/checkboxes')
+            .then(response => response.json())
+            .then(data => updateCheckboxes(data));
+
+        checkboxesContainer.addEventListener('change', saveCheckboxStates);
+        function getCurrentWeekDates() {
+            const now = new Date();
+            const currentDay = now.getDay();
+            const diff = now.getDate() - currentDay + (currentDay === 0 ? -6 : 1); // Adjust when current day is Sunday
+            const monday = new Date(now.setDate(diff));
+            
+            const weekDates = [];
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(monday);
+                date.setDate(monday.getDate() + i);
+                weekDates.push(date);
+            }
+            
+            return weekDates;
+        }
+        
+        function formatDate(date) {
+            const options = { month: 'short', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+        
+        function updateDayLabels() {
+            const weekDates = getCurrentWeekDates();
+            const dayContainers = document.querySelectorAll('.day-container');
+            
+            dayContainers.forEach((container, index) => {
+                const h2 = container.querySelector('h2');
+                const formattedDate = formatDate(weekDates[index]);
+                h2.textContent = `${days[index]} (${formattedDate})`;
+            });
+        }
+        
+        // Call this function after creating checkboxes
+        updateDayLabels();
+        const messageForm = document.getElementById('message-form');
+    const messageInput = document.getElementById('message-input');
+    const messageList = document.getElementById('message-list');
+
+function fetchMessages() {
+  fetch('/api/messages')
+    .then(response => response.json())
+    .then(messages => {
+      messageList.innerHTML = '';
+      if (messages.length === 0) {
+        messageList.innerHTML = '<li>No messages yet.</li>';
+      } else {
+        messages.forEach(message => {
+          const li = document.createElement('li');
+          li.textContent = message.text;
+          const deleteButton = document.createElement('button');
+          deleteButton.textContent = 'Delete';
+          deleteButton.onclick = () => deleteMessage(message.id);
+          li.appendChild(deleteButton);
+          messageList.appendChild(li);
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching messages:', error);
+      messageList.innerHTML = '<li>Error loading messages. Please try again.</li>';
+    });
+}
+
+function submitMessage(event) {
+  event.preventDefault();
+  const text = messageInput.value.trim();
+  if (text) {
+    fetch('/api/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(() => {
+        messageInput.value = '';
+        fetchMessages();
+        console.log('Message submitted successfully');
+      })
+      .catch(error => {
+        console.error('Error submitting message:', error);
+        alert('Failed to submit message. Please try again.');
+      });
+  }
+}
+
+function deleteMessage(id) {
+  fetch(`/api/messages/${id}`, { method: 'DELETE' })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      fetchMessages();
+      console.log('Message deleted successfully');
+    })
+    .catch(error => {
+      console.error('Error deleting message:', error);
+      alert('Failed to delete message. Please try again.');
+    });
+}
+
+messageForm.addEventListener('submit', submitMessage);
+fetchMessages();
+
+// Add this line to check if the script is running
+console.log('Message handling script loaded');
+    </script>
+    
+</body>
+</html>

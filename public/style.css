@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color:rgb(255, 255, 255);
+}
+
+h1 {
+    text-align: center;
+}
+
+.day-container {
+    margin-bottom: 20px;
+}
+
+.checkbox-group {
+    display: flex;
+    justify-content: space-between;
+    max-width: 300px;
+}
+h2 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+label {
+    display: flex;
+    align-items: center;
+}
+
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+#message-section {
+  margin-top: 50px;
+  margin-bottom: 70px;
+}
+
+#message-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+#message-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 300px; /* Set the fixed width of the container */
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+#message-list button {
+  margin-left: 10px;
+}
+
+.links-box h2 {
+    margin-top: 70px;
+}
+.links-box a {
+    margin-top: 20px;
+    text-decoration: none;
+    color: #007BFF;
+    font-weight: bold;
+    display: block;
+    padding: 5px;
+    border-radius: 5px;
+    width: 100px;
+}
+
+.links-box a:visited {
+    color: #007BFF;
+}
+
+.links-box a:hover {
+    background-color: #e6e6e6;
+}
+
+.links-box a:active {
+    color: #0056b3;
+}
