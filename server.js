@@ -1,35 +1,35 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const fs = require('fs');
-const https = require('https');
+// const fs = require('fs');
+// const https = require('https');
 const app = express();
 const port = process.env.PORT || 3000;
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 
 // Load SSL certificate
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/studyssappossible.kro.kr/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/studyssappossible.kro.kr/cert.pem', 'utf8');
-const ca = fs.readFileSync('/etc/letsencrypt/live/studyssappossible.kro.kr/chain.pem', 'utf8');
+// const privateKey = fs.readFileSync('/etc/letsencrypt/live/studyssappossible.kro.kr/privkey.pem', 'utf8');
+// const certificate = fs.readFileSync('/etc/letsencrypt/live/studyssappossible.kro.kr/cert.pem', 'utf8');
+// const ca = fs.readFileSync('/etc/letsencrypt/live/studyssappossible.kro.kr/chain.pem', 'utf8');
 
-const credentials = {
-  key: privateKey,
-  cert: certificate,
-  ca: ca
-};
+// const credentials = {
+//   key: privateKey,
+//   cert: certificate,
+//   ca: ca
+// };
 
 const http = require('http');
 
-const httpApp = express();
-httpApp.use((req, res) => {
-  res.redirect(301, `https://${req.headers.host}${req.url}`);
-});
+// const httpApp = express();
+// httpApp.use((req, res) => {
+//   res.redirect(301, `https://${req.headers.host}${req.url}`);
+// });
 
-const httpPort = 80; // Default HTTP port
-httpApp.listen(httpPort, () => {
-  console.log(`HTTP server running at http://localhost:${httpPort}, redirecting to HTTPS`);
-});
+// const httpPort = 3000; // Default HTTP port
+// httpApp.listen(httpPort, () => {
+//   console.log(`HTTP server running at http://localhost:${httpPort}, redirecting to HTTPS`);
+// });
 
 app.use(cors());
 
@@ -103,8 +103,12 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
   });
   
-  const httpsServer = https.createServer(credentials, app);
+  // const httpsServer = https.createServer(credentials, app);
 
-  httpsServer.listen(port, () => {
-    console.log(`Server running at https://localhost:${port}`);
-  });
+  // httpsServer.listen(port, () => {
+  //   console.log(`Server running at https://localhost:${port}`);
+  // });
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
