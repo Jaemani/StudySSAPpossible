@@ -14,3 +14,6 @@ https://studyssappossible.kro.kr/
 - Nginx
 - SSL
 - firebase(미적용)
+
+# 인화면 Screenshot
+![screencapture-studyssappossible-kro-kr-2024-08-25-21_00_36](https://github.com/user-attachments/assets/c3efd974-52ed-47d2-a8ba-699f887b2b6f)
